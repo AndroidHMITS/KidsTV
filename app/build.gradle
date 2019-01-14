@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.meowmeow.youtubekids"
-        minSdkVersion 23
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -69,5 +69,5 @@ dependencies {
 }
 //apply plugin: 'com.google.gms.google-services'
 
-
 //apply plugin: 'com.google.gms.google-services'
+

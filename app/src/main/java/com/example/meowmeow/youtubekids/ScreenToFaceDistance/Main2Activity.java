@@ -1,14 +1,11 @@
-package com.example.meowmeow.youtubekids.Model;
+package com.example.meowmeow.youtubekids.ScreenToFaceDistance;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.widget.Toast;
 import android.app.Activity;
 import android.hardware.Camera;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,27 +17,13 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import com.example.meowmeow.youtubekids.ScreenToFaceDistance.CameraSurfaceView;
+import com.example.meowmeow.youtubekids.R;
 import com.example.meowmeow.youtubekids.ScreenToFaceDistance.message.MeasurementStepMessage;
 import com.example.meowmeow.youtubekids.ScreenToFaceDistance.message.MessageHUB;
 import com.example.meowmeow.youtubekids.ScreenToFaceDistance.message.MessageListener;
 
+public class Main2Activity extends Activity implements MessageListener {
 
-import com.example.meowmeow.youtubekids.R;
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
-
-public class PlayVideoYTB extends YouTubeBaseActivity
-        implements YouTubePlayer.OnInitializedListener, MessageListener {
-
-    //youtube
-    String API_KEYVIDEO = "AIzaSyA2e3uG6u3_fWeh_KNIS4UN5bZPD2FiDxM";
-    int REQUEST_VIDEO = 123;
-    YouTubePlayerView youTubePlayerView;
-
-    //camera
     public static final String CAM_SIZE_WIDTH = "intent_cam_size_width";
     public static final String CAM_SIZE_HEIGHT = "intent_cam_size_height";
     public static final String AVG_NUM = "intent_avg_num";
@@ -48,7 +31,8 @@ public class PlayVideoYTB extends YouTubeBaseActivity
     Double checkDis,checkHandler = 0.0;
 
     private CameraSurfaceView _mySurfaceView;
-    Camera _cam = Camera.open(1);
+    Camera _cam =null;
+
     private final static DecimalFormat _decimalFormater = new DecimalFormat(
             "0.0");
 
@@ -63,18 +47,12 @@ public class PlayVideoYTB extends YouTubeBaseActivity
 
     TextView _currentDistanceView;
     Button _calibrateButton;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_video_ytb);
-
-        //youtube
-        youTubePlayerView = findViewById(R.id.myYTBView);
-        youTubePlayerView.initialize(API_KEYVIDEO, this);
-
-
-        //camerasurface
+        setContentView(R.layout.activity_main);
         _mySurfaceView = (CameraSurfaceView) findViewById(R.id.surface_camera);
 
         RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(
@@ -105,34 +83,10 @@ public class PlayVideoYTB extends YouTubeBaseActivity
         handler.postDelayed(runnable,20000);
     }
 
-    //youtube
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        String results = getIntent().getExtras().getString("videoId");
-        youTubePlayer.cueVideo(results);
-    }
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(PlayVideoYTB.this, REQUEST_VIDEO );
-        }
-        else {
-            Toast.makeText(this, "Error!!!", Toast.LENGTH_SHORT).show();
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_VIDEO){
-            youTubePlayerView.initialize(API_KEYVIDEO, PlayVideoYTB.this);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
-    //camera
     @Override
     protected void onResume() {
         super.onResume();
-
 
         MessageHUB.get().registerListener(this);
         // _audioManager.registerMediaButtonEventReceiver(_headSetButtonReceiver);
@@ -140,13 +94,11 @@ public class PlayVideoYTB extends YouTubeBaseActivity
         // 1 for front cam. No front cam ? Not my fault!
         try{
 
-
-
-
         }catch (Exception ex)
         {
 
         }
+        _cam = Camera.open(1);
         Camera.Parameters param = _cam.getParameters();
 
         // Find the best suitable camera picture size for your device. Competent
@@ -169,13 +121,13 @@ public class PlayVideoYTB extends YouTubeBaseActivity
                 bestRation = sizeRatio;
             }
         }
-       _cameraHeight = 0;
-       _cameraWidth = 0;
+        _cameraHeight = bestSize.height;
+        _cameraWidth = bestSize.width;
 
-//        Log.d("PInfo", _cameraWidth + " x " + _cameraHeight);
+        Log.d("PInfo", _cameraWidth + " x " + _cameraHeight);
 
         param.setPreviewSize(_cameraWidth, _cameraHeight);
-//        _cam.setParameters(param);
+        _cam.setParameters(param);
         _cam.startPreview();
         _mySurfaceView.setCamera(_cam);
     }
@@ -200,6 +152,8 @@ public class PlayVideoYTB extends YouTubeBaseActivity
     public void pressedCalibrate(final View v) {
 
         if (!_mySurfaceView.isCalibrated()) {
+
+            //_calibrateButton.setBackgroundResource(R.drawable.yellow_button);
             _mySurfaceView.calibrate();
         }
     }
@@ -207,6 +161,8 @@ public class PlayVideoYTB extends YouTubeBaseActivity
     public void pressedReset(final View v) {
 
         if (_mySurfaceView.isCalibrated()) {
+
+           // _calibrateButton.setBackgroundResource(R.drawable.red_button);
             _mySurfaceView.reset();
         }
     }
@@ -235,7 +191,7 @@ public class PlayVideoYTB extends YouTubeBaseActivity
                     .getDistToFace()) + " cm");
             float fontRatio = message.getDistToFace() / 29.7f;
 
-            _currentDistanceView.setTextSize(fontRatio * 20);
+           // _currentDistanceView.setTextSize(fontRatio * 20);
         }
 
         try{
@@ -243,13 +199,6 @@ public class PlayVideoYTB extends YouTubeBaseActivity
         catch (Exception ex){
 
         }
-
-//        if(Double.parseDouble(_decimalFormater.format(message
-//                .getDistToFace())) < 20)
-//        {
-//            Toast.makeText(this, "Quá gần màn hình", Toast.LENGTH_SHORT).show();
-//        }
-
     }
 
     private void resetCam() {
@@ -268,10 +217,12 @@ public class PlayVideoYTB extends YouTubeBaseActivity
                 break;
 
             case MessageHUB.DONE_CALIBRATION:
+
+               // _calibrateButton.setBackgroundResource(R.drawable.green_button);
+
                 break;
             default:
                 break;
         }
     }
-
 }
