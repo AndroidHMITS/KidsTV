@@ -66,6 +66,7 @@ public class RecommendedMovie extends AppCompatActivity implements View.OnClickL
     //private String Base_URL = "https://www.googleapis.com/youtube/v3/";
     // link lấy danh sách video từ playlist id
     public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -123,7 +123,7 @@ public class CameraSurfaceView extends SurfaceView implements Callback,Camera.Pr
 
         if (_foundFace != null) {
 
-            _foundFace.getMidPoint(_middlePoint);
+    _foundFace.getMidPoint(_middlePoint);
 
             Log.i("Camera", _middlePoint.x + " : " + _middlePoint.y);
 

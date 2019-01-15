@@ -223,7 +223,6 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
 
             }
         };
-
         // Register it, specifying the polling interval in
         // microseconds
         sensorManager.registerListener(proximitySensorListener,
