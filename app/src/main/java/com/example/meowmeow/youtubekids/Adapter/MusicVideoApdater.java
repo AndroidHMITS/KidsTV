@@ -18,6 +18,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class MusicVideoApdater extends RecyclerView.Adapter<MusicVideoApdater.MyViewHolder> {
     private Context context;
     private int layout;
@@ -47,6 +49,7 @@ public class MusicVideoApdater extends RecyclerView.Adapter<MusicVideoApdater.My
                     MusicVideo musicVideo = musicVideoList.get(getAdapterPosition());
                     String videoId = musicVideo.getIdVideo();
                     Intent intent = new Intent(context, PlayVideoYTB.class);
+                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("videoId", videoId);
                     context.startActivity(intent);
                     //Toast.makeText(context,txtTitle.getText(), Toast.LENGTH_SHORT).show();

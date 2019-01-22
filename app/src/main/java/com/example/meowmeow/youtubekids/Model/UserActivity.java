@@ -13,8 +13,10 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Rating;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -254,6 +256,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
 
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     public void onFinish() {
                         showAlertDialog();
                         //Toast.makeText(UserActivity.this, "Ứng dụng sẽ bị đóng!!!", Toast.LENGTH_SHORT).show();

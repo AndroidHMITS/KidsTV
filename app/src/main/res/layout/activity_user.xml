@@ -56,13 +56,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:drawableLeft="@drawable/quantum_ic_mode_edit_white_24"
+        android:drawableLeft="@drawable/quantum_ic_mode_edit_black_24"
         android:text="CHỈNH SỬA"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:ignore="MissingConstraints"
-        android:background="#606184"
+        android:background="@drawable/search_edittext"
         tools:layout_editor_absoluteX="262dp"
         tools:layout_editor_absoluteY="282dp" />
 

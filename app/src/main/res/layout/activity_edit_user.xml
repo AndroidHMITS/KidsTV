@@ -13,19 +13,18 @@
         android:layout_height="260dp"
         android:background="@drawable/bg_wave_dot_red">
 
-        <com.spark.submitbutton.SubmitButton
+        <Button
             android:id="@+id/btn_submitedit"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/edt_username"
             android:layout_centerHorizontal="true"
-            android:padding="0dp"
-            android:text="XÁC NHẬN"
+            android:layout_marginTop="-70dp"
+            android:drawablePadding="2dp"
             android:textColor="@color/black"
-            android:textSize="11sp"
-            app:sub_btn_background="@color/white"
-            app:sub_btn_duration="3000"
-            app:sub_btn_tick_color="@color/white" />
+            android:background="@drawable/search_edittext"
+            android:drawableLeft="@drawable/icon_check_submit"
+            android:text="XÁC NHẬN" />
 
         <Button
             android:id="@+id/btn_BackEditUser"

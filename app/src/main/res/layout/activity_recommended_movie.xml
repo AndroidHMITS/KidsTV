@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,20 +9,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="10">
-
+        android:layout_height="80dp"
+        android:orientation="vertical">
         <RelativeLayout
             android:background="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="80dp"
             android:layout_weight="2">
-
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/img_avatar"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
@@ -39,7 +37,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="150dp"
                 android:background="@drawable/icon_recommended"
-                android:stateListAnimator="@animator/anim_scale"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="150dp" />
 
@@ -51,7 +48,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="220dp"
                 android:background="@drawable/icon_hexplore"
-                android:stateListAnimator="@animator/anim_scale"
                 android:contentDescription="TODO"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="220dp" />
@@ -64,14 +60,13 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="290dp"
                 android:background="@drawable/icon_hlearning"
-                android:stateListAnimator="@animator/anim_scale"
+
                 android:contentDescription="TODO"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="290dp" />
 
             <ImageButton
                 android:background="@drawable/icon_hshows"
-                android:stateListAnimator="@animator/anim_scale"
                 android:id="@+id/img_shows"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -84,7 +79,6 @@
 
             <ImageButton
                 android:background="@drawable/icon_hmusic"
-                android:stateListAnimator="@animator/anim_scale"
                 android:id="@+id/img_music"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -98,8 +92,8 @@
             <ImageButton
                 android:background="@drawable/ic_search_kids_black"
                 android:id="@+id/img_search"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="25dp"
@@ -117,34 +111,32 @@
                 android:textStyle="bold"
                 android:textColor="#f12"
                 android:layout_alignRight="@+id/img_recommend" />
-
         </RelativeLayout>
-
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:background="@drawable/gradientrecommended"
-            android:orientation="vertical">
-
-            <RelativeLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/gradientrecommended">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5">
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/recycleview_recommended"
-                    android:orientation="vertical">
-                </android.support.v7.widget.RecyclerView>
-            </RelativeLayout>
-            <RelativeLayout
+                android:layout_height="180dp"
+                android:orientation="vertical">
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="match_parent"
                 android:background="@drawable/favorites_center_background_image">
-            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview_recommended"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </FrameLayout>
+</FrameLayout>

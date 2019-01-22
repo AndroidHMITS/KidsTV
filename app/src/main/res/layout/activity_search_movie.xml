@@ -1,114 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    tools:context=".Model.SearchMovie">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:orientation="vertical"
-        android:weightSum="10">
-
+        android:background="@color/colorPrimary">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:background="#ffffff">
-
-            <!--<ImageButton-->
-            <!--android:id="@+id/img_back"-->
-            <!--android:layout_width="25dp"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="21dp"-->
-            <!--android:layout_marginStart="21dp"-->
-            <!--android:background="@drawable/ic_back_kids_black" />-->
-
-            <!--<SearchView-->
-            <!--android:id="@+id/search_view"-->
-            <!--android:layout_width="436dp"-->
-            <!--android:layout_height="70dp"-->
-            <!--android:queryHint="@string/search_hint"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_marginEnd="48dp"-->
-            <!--android:iconifiedByDefault="false"-->
-            <!--android:paddingLeft="-8dp"-->
-            <!--android:paddingRight="-8dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginRight="48dp" />-->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="#ffffff"
                 android:weightSum="5">
 
                 <LinearLayout
-                    android:layout_weight="4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageButton
-                        android:id="@+id/img_back"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_back_kids_black" />
-                </LinearLayout>
-                <LinearLayout
                     android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical">
 
-                    <android.support.v7.widget.Toolbar
-                        android:id="@+id/toolbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#ffffff"
-                        />
+                    <ImageButton
+                        android:id="@+id/img_back"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_back_kids_black" />
+
+                    <EditText
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_width="470dp"
+                        android:layout_height="56dp"
+                        android:id="@+id/txt_search"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="18dp"
+                        android:hint="Nhập từ khóa muốn tìm kiếm"
+                        android:drawableEnd="@drawable/ic_search_kids_black_small"
+                        android:drawableRight="@drawable/ic_search_kids_black_small"
+                        android:layout_marginLeft="30dp" />
+                    <!--<android.support.v7.widget.SearchView-->
+                        <!--android:id="@+id/searchview_active"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:iconifiedByDefault="false"-->
+                        <!--android:queryHint="Nhập vào từ khóa muốn tìm kiếm">-->
+                        <!--<requestFocus />-->
+                    <!--</android.support.v7.widget.SearchView>-->
                 </LinearLayout>
-
             </LinearLayout>
 
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:background="@drawable/gradientsearch"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/card_recycler_view"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </android.support.v7.widget.RecyclerView>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:background="@drawable/canvas_bg_default_search"></RelativeLayout>
-        </LinearLayout>
-
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/gradientsearch">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:orientation="vertical">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/canvas_bg_default_search">
+            </LinearLayout>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/card_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </FrameLayout>
+</FrameLayout>

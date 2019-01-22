@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class PlayVideoAdapter extends RecyclerView.Adapter<PlayVideoAdapter.MyViewHolder> {
     Context context;
     int layout;
@@ -63,6 +65,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter<PlayVideoAdapter.MyVi
                     PlayVideo playVideo = playVideoList.get(getAdapterPosition());
                     String videoId = playVideo.getIdVideo();
                     Intent intent = new Intent(context, PlayVideoYTB.class);
+                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("videoId", videoId);
                     context.startActivity(intent);
                 }

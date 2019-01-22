@@ -36,6 +36,7 @@ import com.example.meowmeow.youtubekids.Interface.LearningVideo;
 import com.example.meowmeow.youtubekids.Interface.MusicVideo;
 import com.example.meowmeow.youtubekids.R;
 import com.github.siyamed.shapeimageview.CircularImageView;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,14 +51,14 @@ public class LearningMovie extends AppCompatActivity implements View.OnClickList
     CircularImageView img_user;
 
     private String API_KEYPLAYLIST = "AIzaSyAI6YiDW8IaP6bVYSLTPyih2uNX0PWNyn0";
-    private String ID_PLAYLIST = "PLNI3rMEOpVxmWIeT7XEuA0xIQXAyECmuV";
-
+//    private String ID_PLAYLIST = "PLNI3rMEOpVxmWIeT7XEuA0xIQXAyECmuV";
+    private String keywword = "Hoc tap cho tre em";
     RecyclerView recyclerView;
     ArrayList<LearningVideo> learningMovieArrayList = new ArrayList<>();
     LearningVideoAdapter learningVideoAdapter;
 
     // link lấy danh sách video từ playlist id
-    public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
+//    public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +67,13 @@ public class LearningMovie extends AppCompatActivity implements View.OnClickList
         //ánh xạ đến view để hiển thị
         AnhXa();
         //lấy dữ liệu từ youtube
-        GetYTBJson(urlYTB);
+        GetYTBJson(keywword);
         //sự kiện click của button
         ControlButton();
         //lấy dữ liệu từ sharepreferences
         GetPreferences();
         //Cảm biến để đo khoảng cách trong android
-        SensorKidsTV();
+        //SensorKidsTV();
     }
 
     private void AnhXa() {
@@ -131,7 +132,8 @@ public class LearningMovie extends AppCompatActivity implements View.OnClickList
         recyclerView = (RecyclerView) findViewById(R.id.recycleview_learning);
     }
 
-    private void GetYTBJson(final String url) {
+    private void GetYTBJson(final String keyword) {
+        String url ="https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&maxResults=50&type=video&key="+API_KEYPLAYLIST;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -146,12 +148,12 @@ public class LearningMovie extends AppCompatActivity implements View.OnClickList
                             {
                                 JSONObject jsonObject = jsonItems.getJSONObject(i);
                                 JSONObject jsonSnippet = jsonObject.getJSONObject("snippet");
+                                JSONObject jsonID = jsonObject.getJSONObject("id");
                                 title = jsonSnippet.getString("title");
                                 JSONObject jsonThumbnails = jsonSnippet.getJSONObject("thumbnails");
                                 JSONObject jsonMedium = jsonThumbnails.getJSONObject("medium");
                                 urlvideo = jsonMedium.getString("url");
-                                JSONObject jsonResource = jsonSnippet.getJSONObject("resourceId");
-                                idvideo = jsonResource.getString("videoId");
+                                idvideo = jsonID.getString("videoId");
 
                                 learningMovieArrayList.add(new LearningVideo(title,urlvideo,idvideo));
                             }

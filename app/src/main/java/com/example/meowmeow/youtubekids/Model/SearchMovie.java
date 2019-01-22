@@ -8,17 +8,16 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
+//import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.example.meowmeow.youtubekids.Adapter.DataAdapter;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,9 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.meowmeow.youtubekids.Adapter.SearchVideoAdapter;
-//import com.example.meowmeow.youtubekids.Interface.RequestInterface;
 import com.example.meowmeow.youtubekids.Interface.SearchVideo;
-//import com.example.meowmeow.youtubekids.JSONResponse;
 import com.example.meowmeow.youtubekids.R;
 
 import org.json.JSONArray;
@@ -40,8 +37,10 @@ import java.util.ArrayList;
 public class SearchMovie extends AppCompatActivity {
 
     ImageButton imageBack;
+    public EditText edt_search;
+    SearchView searchView;
+    LinearLayoutManager mLayoutManager;
 
-    public Toolbar toolbar;
     private String API_KEYPLAYLIST = "AIzaSyAI6YiDW8IaP6bVYSLTPyih2uNX0PWNyn0";
     //private String ID_PLAYLIST = "PLVOZ_45NZhu58nzy9VyRjsuEVlrIzgnqW";
     //private String Base_URL = "https://www.googleapis.com/youtube/v3/";
@@ -51,16 +50,16 @@ public class SearchMovie extends AppCompatActivity {
     private ArrayList<SearchVideo> searchVideoList = new ArrayList<>();
     private SearchVideoAdapter searchVideoAdapter;
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_movie);
-
         imageBack = findViewById(R.id.img_back);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
+//        searchView = (SearchView) findViewById(R.id.searchview_active);
+//        ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(getResources().getColor(R.color.black));
+//        ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTextColor(getResources().getColor(R.color.black));
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,102 +69,131 @@ public class SearchMovie extends AppCompatActivity {
             }
         });
 
-       // searches = toolbar.getTitle().toString();
-//        GetYTBJson(query);
 
+        edt_search = findViewById(R.id.txt_search);
+
+
+//        searchView.setOnQueryTextListener(this);
+//        SearchView.SearchAutoComplete searchAutoComplete =
+//                searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+//        searchAutoComplete.setHintTextColor(R.color.colorPrimaryDark);
+////        searchAutoComplete.setTextColor(R.color.colorPrimaryDark);
+//        Edt();
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searches = s.toString();
+                if(searches == ""){
+                    GetYTBJson("");
+                }else {
+                    Log.d("BBB", String.valueOf(searches));
+                    GetYTBJson(searches);
+                }
+            }
+        });
+
+//        GetYTBJson(searches);
     }
 
+
+
+//    searches = editable.toString();
+////                searches = query;
+//                Log.d("BBB", String.valueOf(editable));
+//    GetYTBJson(searches);
+//    //                Log.d("BBB", String.valueOf(s));
+////                GetYTBJson(searches);
+//
     private void GetYTBJson(String keyword) {
+        searchVideoList = new ArrayList<>();
+        String url ="https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&maxResults=30&type=video&key="+API_KEYPLAYLIST;
+        if(keyword.equals("")){
+            searchVideoAdapter = new SearchVideoAdapter(getApplicationContext(), R.layout.item_custom_video, searchVideoList);
+            mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.setAdapter(searchVideoAdapter);
 
-        String url ="https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&maxResults=10&type=video&key="+API_KEYPLAYLIST;
-        Log.d("BBB",url);
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new com.android.volley.Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonItems = response.getJSONArray("items");
-                            String title = "";
-                            String urlvideo = "";
-                            String idvideo = "";
-                            for (int i = 0; i < jsonItems.length(); i++) {
-                                JSONObject jsonObject = jsonItems.getJSONObject(i);
-                                JSONObject jsonId = jsonObject.getJSONObject("id");
-                                JSONObject jsonSnippet = jsonObject.getJSONObject("snippet");
-                                title = jsonSnippet.getString("title");
-                                JSONObject jsonThumbnails = jsonSnippet.getJSONObject("thumbnails");
-                                JSONObject jsonMedium = jsonThumbnails.getJSONObject("medium");
-                                urlvideo = jsonMedium.getString("url");
+            searchVideoAdapter.notifyDataSetChanged();
+        }
+        else{
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray jsonItems = response.getJSONArray("items");
+                                String title = "";
+                                String urlvideo = "";
+                                String idvideo = "";
+                                for (int i = 0; i < jsonItems.length(); i++) {
+                                    JSONObject jsonObject = jsonItems.getJSONObject(i);
+                                    JSONObject jsonId = jsonObject.getJSONObject("id");
+                                    JSONObject jsonSnippet = jsonObject.getJSONObject("snippet");
+                                    title = jsonSnippet.getString("title");
+                                    JSONObject jsonThumbnails = jsonSnippet.getJSONObject("thumbnails");
+                                    JSONObject jsonMedium = jsonThumbnails.getJSONObject("medium");
+                                    urlvideo = jsonMedium.getString("url");
 //                                JSONObject jsonResource = jsonId.getJSONObject("id");
-                                idvideo = jsonId.getString("videoId");
+                                    idvideo = jsonId.getString("videoId");
 
-                                searchVideoList.add(new SearchVideo(title, urlvideo, idvideo));
+                                    searchVideoList.add(new SearchVideo(title, urlvideo, idvideo));
+                                }
+
+                                searchVideoAdapter = new SearchVideoAdapter(getApplicationContext(), R.layout.item_custom_video, searchVideoList);
+                                mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                mRecyclerView.setHasFixedSize(true);
+                                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                                mRecyclerView.setAdapter(searchVideoAdapter);
+
+                                searchVideoAdapter.notifyDataSetChanged();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
-                            searchVideoAdapter = new SearchVideoAdapter(getApplicationContext(), R.layout.item_custom_video, searchVideoList);
-                            mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
-                            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                            mRecyclerView.setLayoutManager(mLayoutManager);
-                            mRecyclerView.setHasFixedSize(true);
-                            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                            mRecyclerView.setAdapter(searchVideoAdapter);
-
-                            searchVideoAdapter.notifyDataSetChanged();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 //                        Toast.makeText(SearchMovie.this, response.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(SearchMovie.this, "Error!!!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(SearchMovie.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        }
+
     }
 
-    //color text search
-    @SuppressLint("ResourceAsColor")
+    public void Edt(){
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-//        getMenuInflater().inflate(R.menu.search_menu, menu);
-        inflater.inflate(R.menu.search_menu,menu);
-
-        final MenuItem search = menu.findItem(R.id.search);
-//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-        SearchView searchView = (SearchView) search.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        SearchView.SearchAutoComplete searchAutoComplete =
-                searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchAutoComplete.setHintTextColor(R.color.colorPrimary);
-        searchAutoComplete.setTextColor(R.color.colorPrimary);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searches = query;
-                Log.d("BBB",searches);
-                GetYTBJson(query);
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                try{
-                    searchVideoAdapter.getFilter().filter(newText);
-                    return false;
-                }
-                catch (Exception ex){
-                    return  true;
-                }
-            }
-        });
-        return true;
     }
+
+//
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        searches = query;
+//        Log.d("BBB",searches);
+//        GetYTBJson(query);
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        String text = newText;
+////        searchVideoAdapter.filter(text);
+//        return false;
+//    }
 }

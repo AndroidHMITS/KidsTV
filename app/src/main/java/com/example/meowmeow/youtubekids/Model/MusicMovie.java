@@ -50,9 +50,10 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
 
     private String API_KEYPLAYLIST = "AIzaSyAI6YiDW8IaP6bVYSLTPyih2uNX0PWNyn0";
     private String ID_PLAYLIST = "PLVOZ_45NZhu58nzy9VyRjsuEVlrIzgnqW";
+    private String keywword = "Am nhac cho tre em";
 
     // link lấy danh sách video từ playlist id
-    public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
+//    public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +63,13 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
         //ánh xạ đến view để hiển thị
         AnhXa();
         //lấy dữ liệu từ youtube
-        GetYTBJson(urlYTB);
+        GetYTBJson(keywword);
         // sự kiện click của button
         ControlButton();
         //lấy dữ liệu từ sharepreferences
         GetPreferences();
         //Cảm biến để đo khoảng cách trong android
-        SensorKidsTV();
+        //SensorKidsTV();
     }
 
     private void AnhXa() {
@@ -126,7 +127,8 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
         }
     }
 
-    private void GetYTBJson(final String url) {
+    private void GetYTBJson(final String keyword) {
+        String url ="https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&maxResults=50&type=video&key="+API_KEYPLAYLIST;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -141,12 +143,12 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
                             {
                                 JSONObject jsonObject = jsonItems.getJSONObject(i);
                                 JSONObject jsonSnippet = jsonObject.getJSONObject("snippet");
+                                JSONObject jsonID = jsonObject.getJSONObject("id");
                                 title = jsonSnippet.getString("title");
                                 JSONObject jsonThumbnails = jsonSnippet.getJSONObject("thumbnails");
                                 JSONObject jsonMedium = jsonThumbnails.getJSONObject("medium");
                                 urlvideo = jsonMedium.getString("url");
-                                JSONObject jsonResource = jsonSnippet.getJSONObject("resourceId");
-                                idvideo = jsonResource.getString("videoId");
+                                idvideo = jsonID.getString("videoId");
 
                                 arrayListMusic.add(new MusicVideo(title,urlvideo,idvideo));
                             }
@@ -188,44 +190,45 @@ public class MusicMovie extends YouTubeBaseActivity implements View.OnClickListe
                 .decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
-    public void SensorKidsTV(){
-        SensorManager sensorManager =
-                (SensorManager) getSystemService(SENSOR_SERVICE);
-        final Sensor proximitySensor =
-                sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        if(proximitySensor == null) {
-            Log.e(TAG, "Proximity sensor not available.");
-            finish(); // Close app
-        }
-        // Create listener
-        SensorEventListener proximitySensorListener = new SensorEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                // More code goes here
-                if(sensorEvent.values[0] < proximitySensor.getMaximumRange()) {
-                    WindowManager.LayoutParams params = getWindow().getAttributes();
-                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                    params.screenBrightness = 0;
-                    params.getColorMode();
-                    getWindow().setAttributes(params);
+//    public void SensorKidsTV(){
+//        SensorManager sensorManager =
+//                (SensorManager) getSystemService(SENSOR_SERVICE);
+//        final Sensor proximitySensor =
+//                sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+//        if(proximitySensor == null) {
+//            Log.e(TAG, "Proximity sensor not available.");
+//            finish(); // Close app
+//        }
+//        // Create listener
+//        SensorEventListener proximitySensorListener = new SensorEventListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void onSensorChanged(SensorEvent sensorEvent) {
+//                // More code goes here
+//                if(sensorEvent.values[0] < proximitySensor.getMaximumRange()) {
+//                    WindowManager.LayoutParams params = getWindow().getAttributes();
+//                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+//                    params.screenBrightness = 0;
+//                    params.getColorMode();
+//                    getWindow().setAttributes(params);
+//
+//                } else {
+//                    WindowManager.LayoutParams params = getWindow().getAttributes();
+//                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+//                    params.screenBrightness = 0.9f;
+//                    getWindow().setAttributes(params);
+//                }
+//            }
+//
+//            @Override
+//            public void onAccuracyChanged(Sensor sensor, int i) {
+//
+//            }
+//        };
+//        // Register it, specifying the polling interval in
+//        // microseconds
+//        sensorManager.registerListener(proximitySensorListener,
+//                proximitySensor, 2 * 1000 * 1000);
+//    }
 
-                } else {
-                    WindowManager.LayoutParams params = getWindow().getAttributes();
-                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                    params.screenBrightness = 0.9f;
-                    getWindow().setAttributes(params);
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
-        // Register it, specifying the polling interval in
-        // microseconds
-        sensorManager.registerListener(proximitySensorListener,
-                proximitySensor, 2 * 1000 * 1000);
-    }
 }

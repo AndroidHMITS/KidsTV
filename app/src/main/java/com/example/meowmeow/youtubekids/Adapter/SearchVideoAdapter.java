@@ -68,7 +68,6 @@ public class SearchVideoAdapter extends RecyclerView.Adapter<SearchVideoAdapter.
         }
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -123,42 +122,4 @@ public class SearchVideoAdapter extends RecyclerView.Adapter<SearchVideoAdapter.
             notifyDataSetChanged();
         }
     };
-//    @Override
-//    public Filter getFilter() {
-//        return new Filter() {
-//            @Override
-//            protected FilterResults performFiltering(CharSequence charSequence) {
-//
-//                String charString = charSequence.toString();
-//
-//                if (charString.isEmpty()) {
-//
-//                    searchFilteredList = searchVideoList;
-//                } else {
-//
-//                    ArrayList<SearchVideo> filteredList = new ArrayList<>();
-//
-//                    for (SearchVideo searchVideo : searchVideoList) {
-//
-//                        if (searchVideo.getTitle().toLowerCase().contains(charString) || searchVideo.getIdVideo().toLowerCase().contains(charString) || searchVideo.getThumbnails().toLowerCase().contains(charString)) {
-//
-//                            filteredList.add(searchVideo);
-//                        }
-//                    }
-//
-//                    searchFilteredList = filteredList;
-//                }
-//
-//                FilterResults filterResults = new FilterResults();
-//                filterResults.values = searchFilteredList;
-//                return filterResults;
-//            }
-//
-//            @Override
-//            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-//                searchFilteredList = (ArrayList<SearchVideo>) filterResults.values;
-//                notifyDataSetChanged();
-//            }
-//        };
-//    }
 }

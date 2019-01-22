@@ -72,10 +72,10 @@ public class FaceDetectionThread extends Thread {
 
         // Rotate the so it siuts our portrait mode
         Matrix matrix = new Matrix();
-//        matrix.postRotate(90);
-//        matrix.preScale(-1, 1);
-        matrix.postRotate(180);
-        matrix.preScale(1,-1);
+        matrix.postRotate(90);
+        matrix.preScale(-1, 1);
+//        matrix.postRotate(180);
+//        matrix.preScale(1,-1);
         // We rotate the same Bitmap
         _currentFrame = Bitmap.createBitmap(_currentFrame, 0, 0,
                 _previewSize.width, _previewSize.height, matrix, false);
@@ -102,5 +102,4 @@ public class FaceDetectionThread extends Thread {
         _currentFace = faces[0];
         Log.d(FACEDETECTIONTHREAD_TAG, "Found: " + faces[0] + " Faces");
     }
-
 }

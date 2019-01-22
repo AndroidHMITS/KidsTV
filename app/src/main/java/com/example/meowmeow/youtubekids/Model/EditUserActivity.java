@@ -32,9 +32,8 @@ import java.util.List;
 
 public class EditUserActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnbackedit;
+    Button btnbackedit,btnsubmit;
     EditText edt_username;
-    SubmitButton btnsubmit;
     public static CircularImageView imgavatar;
 
     private List<UserAvatar> userAvatarList = new ArrayList<>();

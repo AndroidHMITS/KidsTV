@@ -48,15 +48,13 @@ public class ExplorerMovie extends AppCompatActivity implements View.OnClickList
     CircularImageView img_user;
 
     private String API_KEYPLAYLIST = "AIzaSyAI6YiDW8IaP6bVYSLTPyih2uNX0PWNyn0";
-    private String ID_PLAYLIST = "PLO21AvsmQDO0JZBwsp2Xe4XvFjqfeyB-R";
+//    private String ID_PLAYLIST = "PLO21AvsmQDO0JZBwsp2Xe4XvFjqfeyB-R";
 
     RecyclerView recyclerView;
     ArrayList<ExploreVideo> exploreVideoArrayList = new ArrayList<>();
     ExploreVideoAdapter exploreVideoAdapter;
-
+    private String keywword = "Kham pha cho tre em";
     // link lấy danh sách video từ playlist id
-    public String urlYTB = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="+ID_PLAYLIST+"&key="+API_KEYPLAYLIST;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +62,13 @@ public class ExplorerMovie extends AppCompatActivity implements View.OnClickList
         //ánh xạ đến view để hiển thị
         AnhXa();
         //lấy dữ liệu từ youtube
-        GetYTBJson(urlYTB);
+        GetYTBJson(keywword);
         // sự kiện click của button
         ControlButton();
         //lấy dữ liệu từ sharepreferences
         GetPreferences();
         //Cảm biến để đo khoảng cách trong android
-        SensorKidsTV();
+        //SensorKidsTV();
     }
 
     private void AnhXa() {
@@ -126,7 +124,8 @@ public class ExplorerMovie extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void GetYTBJson(final String url) {
+    private void GetYTBJson(final String keyword) {
+        String url ="https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&maxResults=50&type=video&key="+API_KEYPLAYLIST;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -141,12 +140,12 @@ public class ExplorerMovie extends AppCompatActivity implements View.OnClickList
                             {
                                 JSONObject jsonObject = jsonItems.getJSONObject(i);
                                 JSONObject jsonSnippet = jsonObject.getJSONObject("snippet");
+                                JSONObject jsonID = jsonObject.getJSONObject("id");
                                 title = jsonSnippet.getString("title");
                                 JSONObject jsonThumbnails = jsonSnippet.getJSONObject("thumbnails");
                                 JSONObject jsonMedium = jsonThumbnails.getJSONObject("medium");
                                 urlvideo = jsonMedium.getString("url");
-                                JSONObject jsonResource = jsonSnippet.getJSONObject("resourceId");
-                                idvideo = jsonResource.getString("videoId");
+                                idvideo = jsonID.getString("videoId");
 
                                 exploreVideoArrayList.add(new ExploreVideo(title,urlvideo,idvideo));
                             }

@@ -67,6 +67,7 @@ public class LearningVideoAdapter extends RecyclerView.Adapter<LearningVideoAdap
                     LearningVideo learningVideo = learningVideoList.get(getAdapterPosition());
                     String videoId = learningVideo.getIdVideo();
                     Intent intent = new Intent(context, PlayVideoYTB.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("videoId",videoId);
                     context.startActivity(intent);
                 }

@@ -1,13 +1,16 @@
 package com.example.meowmeow.youtubekids.ScreenToFaceDistance;
-
 import android.app.Activity;
+import android.app.Dialog;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -23,7 +26,6 @@ import com.example.meowmeow.youtubekids.ScreenToFaceDistance.message.MessageHUB;
 import com.example.meowmeow.youtubekids.ScreenToFaceDistance.message.MessageListener;
 
 public class Main2Activity extends Activity implements MessageListener {
-
     public static final String CAM_SIZE_WIDTH = "intent_cam_size_width";
     public static final String CAM_SIZE_HEIGHT = "intent_cam_size_height";
     public static final String AVG_NUM = "intent_avg_num";
@@ -47,7 +49,6 @@ public class Main2Activity extends Activity implements MessageListener {
 
     TextView _currentDistanceView;
     Button _calibrateButton;
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,9 @@ public class Main2Activity extends Activity implements MessageListener {
         Log.d("PInfo", _cameraWidth + " x " + _cameraHeight);
 
         param.setPreviewSize(_cameraWidth, _cameraHeight);
+        //param.set("orientation", "landscape");
         _cam.setParameters(param);
+//        _cam.setDisplayOrientation(90);
         _cam.startPreview();
         _mySurfaceView.setCamera(_cam);
     }
@@ -147,22 +150,50 @@ public class Main2Activity extends Activity implements MessageListener {
     /**
      * Sets the current eye distance to the calibration point.
      *
-     * @paramv
+     * @param v
      */
     public void pressedCalibrate(final View v) {
 
         if (!_mySurfaceView.isCalibrated()) {
 
-            //_calibrateButton.setBackgroundResource(R.drawable.yellow_button);
+            _calibrateButton.setBackgroundResource(R.drawable.yellow_button);
             _mySurfaceView.calibrate();
         }
+    }
+
+    public static void setCameraDisplayOrientation(Activity activity,
+                                                   int cameraId, android.hardware.Camera camera) {
+
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
     }
 
     public void pressedReset(final View v) {
 
         if (_mySurfaceView.isCalibrated()) {
 
-           // _calibrateButton.setBackgroundResource(R.drawable.red_button);
+            _calibrateButton.setBackgroundResource(R.drawable.red_button);
             _mySurfaceView.reset();
         }
     }
@@ -184,14 +215,16 @@ public class Main2Activity extends Activity implements MessageListener {
         float results = message.getDistToFace();
         if(results >0 && results <= 25)
         {
-            finish();
+            //finish();
+            UnscreenBackground();
             //Toast.makeText(this, "ABC", Toast.LENGTH_SHORT).show();
         }else {
+
             _currentDistanceView.setText(_decimalFormater.format(message
                     .getDistToFace()) + " cm");
             float fontRatio = message.getDistToFace() / 29.7f;
 
-           // _currentDistanceView.setTextSize(fontRatio * 20);
+            _currentDistanceView.setTextSize(fontRatio * 20);
         }
 
         try{
@@ -199,6 +232,41 @@ public class Main2Activity extends Activity implements MessageListener {
         catch (Exception ex){
 
         }
+//        try {
+//            int results = (int) message.getDistToFace();
+//            _currentDistanceView.setText(_decimalFormater.format(message
+//                    .getDistToFace()) + " cm");
+//            if(0> results && results <=25)
+//        {
+//            Toast.makeText(this, "Khoảng cách gần", Toast.LENGTH_SHORT).show();
+//        }
+//        else {
+//            float fontRatio = message.getDistToFace() / 29.7f;
+//
+//            _currentDistanceView.setTextSize(fontRatio * 20);
+//            checkDis = Double.parseDouble(_decimalFormater.format(message.getDistToFace()));
+//        }
+//        } catch (Exception ex)
+//        {}
+//        if(Double.parseDouble(_decimalFormater.format(message
+//                .getDistToFace())) < 20)
+//        {
+//            Toast.makeText(this, "Quá gần màn hình", Toast.LENGTH_SHORT).show();
+//        }
+
+    }
+
+    private void UnscreenBackground() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_unscreened_background);
+        //Custom dialog
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.gravity = Gravity.CENTER;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.show();
     }
 
     private void resetCam() {
@@ -218,11 +286,12 @@ public class Main2Activity extends Activity implements MessageListener {
 
             case MessageHUB.DONE_CALIBRATION:
 
-               // _calibrateButton.setBackgroundResource(R.drawable.green_button);
+                _calibrateButton.setBackgroundResource(R.drawable.green_button);
 
                 break;
             default:
                 break;
         }
     }
+
 }
